@@ -1,3 +1,5 @@
+![alt text](VectorField - Godot Engine 2023_9_27 下午 08_35_56.png)
+
 # FGA to Godot Texture3D Convertor
 
 FGA (Fluid Grid Ascii) is a format vector field. In Vectoraygen or Unreal Engine, it can direct be imported into project / material. But even Godot has GPUParticlesAttractorVectorField3D Node, it cannot read FGA directly. This simple C++ file shows how to read the FGA and convert to Godot readable image, which can directly import into Godot project with correct Texture3D slice setting.
