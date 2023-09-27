@@ -11,7 +11,7 @@
 const int BYTES_PER_PIXEL = 3; // RGB without Alpha
 const int FILE_HEADER_SIZE = 14;
 const int INFO_HEADER_SIZE = 40;
-const int MAX_SLICE_SIZE = 24; // how many slice in a single line, Godot 4.1 Texture3D only accept H:256 V:256 slice at most.
+const int MAX_SLICE_SIZE = 8; // how many slice in a single line, Godot 4.1 Texture3D only accept H:256 V:256 slice at most.
 
 // help function to create BMP file header
 unsigned char* createBitmapFileHeader(int height, int stride);
@@ -99,17 +99,11 @@ int main()
 			g = std::stof(svec3[1]);
 			b = std::stof(svec3[2]);
 
-			if (z == 0)
-				std::cout << idx + 4 << ": " << r << " " << g << " " << b << std::endl;
-
 			// convert [min ~ max] to [0, 0xFF] 
-			image[idx*3] = (unsigned char)( 255 * (r - min[0]) / ( max[0] - min[0]));
+			// https://en.wikipedia.org/wiki/BMP_file_format, piexl bytes is GBR (i.e. RED is '00 00 FF')
+			image[idx*3] = (unsigned char)( 255 * (b - min[0]) / ( max[0] - min[0]));
 			image[idx*3+1] = (unsigned char)(255 * (g - min[1]) / (max[1] - min[1]));
-			image[idx*3+2] = (unsigned char)(255 * (b - min[2]) / (max[2] - min[2]));
-
-			if ( z == 0 )
-				std::cout << idx + 4 << ": " << remap(image[idx*3]) << "," << remap(image[idx*3+1]) << "," << remap(image[idx*3+2]) << std::endl;
-
+			image[idx*3+2] = (unsigned char)(255 * (r - min[2]) / (max[2] - min[2]));
 		}
 		imgs.insert(std::pair<int, unsigned char*>(z, image));
 	}
